@@ -8,7 +8,8 @@
 import pika
 
 
-connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+parameters = pika.ConnectionParameteres('localhost')
+connection = pika.BlockingConnection(parameters)
 channel = connection.channel()
 
 channel.queue_declare(queue='hello')
