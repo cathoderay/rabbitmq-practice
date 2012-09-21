@@ -9,6 +9,7 @@ import time
 
 import pika
 
+
 parameters = pika.ConnectionParameters('localhost')
 connection = pika.BlockingConnection(parameters)
 channel = connection.channel()
@@ -20,8 +21,8 @@ def callback(ch, method, properties, body):
     print " [x] Received %r" % (body,)
     time.sleep(body.count('.'))
     print " [x] Done"
+    ch.basic_ack(delivery_tag = method.delivery_tag)
 
 channel.basic_consume(callback,
-                      queue='hello',
-                      no_ack=True)
+                      queue='hello')
 channel.start_consuming()
