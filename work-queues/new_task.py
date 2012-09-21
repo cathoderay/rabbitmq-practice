@@ -10,15 +10,18 @@ import sys
 import pika
 
 
+queue_name = "task_queue"
 parameters = pika.ConnectionParameters('localhost')
 connection = pika.BlockingConnection(parameters)
 channel = connection.channel()
 
-channel.queue_declare(queue='hello')
+channel.queue_declare(queue=queue_name, durable=True)
 message = ' '.join(sys.argv[1:]) or "Hello World!"
+properties = pika.BasicProperties(delivery_mode=2)
 channel.basic_publish(exchange='',
-                      routing_key='hello',
-                      body=message)
+                      routing_key=queue_name,
+                      body=message,
+                      properties=properties)
 
 print " [x] Sent %r" % (message, )
 connection.close()

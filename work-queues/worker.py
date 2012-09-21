@@ -10,11 +10,12 @@ import time
 import pika
 
 
+queue_name = "task_queue"
 parameters = pika.ConnectionParameters('localhost')
 connection = pika.BlockingConnection(parameters)
 channel = connection.channel()
 
-channel.queue_declare(queue='hello')
+channel.queue_declare(queue=queue_name, durable=True)
 print ' [*] Waiting for messages. To exit press CTRL+C'
 
 def callback(ch, method, properties, body):
@@ -23,6 +24,7 @@ def callback(ch, method, properties, body):
     print " [x] Done"
     ch.basic_ack(delivery_tag = method.delivery_tag)
 
+channel.basic_qos(prefetch_count=1)
 channel.basic_consume(callback,
-                      queue='hello')
+                      queue=queue_name)
 channel.start_consuming()
