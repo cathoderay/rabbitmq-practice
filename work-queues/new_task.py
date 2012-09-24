@@ -17,7 +17,7 @@ channel = connection.channel()
 
 channel.queue_declare(queue=queue_name, durable=True)
 message = ' '.join(sys.argv[1:]) or "Hello World!"
-properties = pika.BasicProperties(delivery_mode=2)
+properties = pika.BasicProperties(delivery_mode=2) #2 to persist
 channel.basic_publish(exchange='',
                       routing_key=queue_name,
                       body=message,

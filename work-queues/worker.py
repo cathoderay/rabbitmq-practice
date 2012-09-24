@@ -24,7 +24,9 @@ def callback(ch, method, properties, body):
     print " [x] Done"
     ch.basic_ack(delivery_tag = method.delivery_tag)
 
-channel.basic_qos(prefetch_count=1)
+# prefetch_count=1 promotes fair dispatch
+channel.basic_qos(prefetch_count=1) 
+
 channel.basic_consume(callback,
                       queue=queue_name)
 channel.start_consuming()
